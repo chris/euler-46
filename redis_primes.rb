@@ -6,7 +6,7 @@
 
 require "redis"
 
-SET_NAME = "primes"
+SET_NAME = "euler-46:primes"
 redis = Redis.new
 
 redis.zremrangebyscore(SET_NAME, 0, "inf")

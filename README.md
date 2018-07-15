@@ -22,8 +22,27 @@ I had assumed that this might take a bit of time to run and find a solution, and
 
 It turned out that at least the initial Clojure implementation was so fast that doing the above is probably not going to gain anything. However, I may still try it just to practice use of channels/go-blocks, etc., and then also to be able to compare this design in other languages.
 
+## Redis setup
+
+Run `./redis_primes.rb` with the `primes_upto_1million.txt` file (you won't need more than this, or really even half this) to populate the primes in Redis:
+```
+./redis_primes.rb primes_upto_1million.txt
+```
+ This adds them to a sorted set called "euler-46:primes". You need to have Redis running locally for this to work. You also need to have the `redis` gem installed and the proper Ruby version per `.ruby-version`.
+
 ## Clojure
 
 Initial version with just basically brute force going through odd composites was really fast - takes about 8 seconds, including JVM startup time, etc. and really only ~1.2 seconds (1147-1229ms) per the actual code runtime (see code where it does/outputs the timing).
+
+To run it/find the answer:
+```
+clj -m goldbach
+```
+
+To run the tests:
+```
+clj -Atest
+```
+
 
 

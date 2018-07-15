@@ -2,7 +2,7 @@
   (:require [clj-time [core :as t]]
             [taoensso.carmine :as car :refer (wcar)]))
 
-(def PRIMES "primes") ; Redis primes set name
+(def PRIMES "euler-46:primes") ; Redis primes set name
 (def server-conn {:pool {} :spec {}}) ; See `wcar` docstring for opts
 (defmacro wcar* [& body] `(car/wcar server-conn ~@body))
 
