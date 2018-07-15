@@ -47,3 +47,7 @@
   (testing "it works"
     (is (= 15 (next-odd-composite 9)))
     (is (= 33 (next-odd-composite 27)))))
+
+(deftest test-smallest-non-goldbach
+  (testing "get the right answer to the Euler problem"
+    (is (= 5777 (smallest-non-goldbach)))))
