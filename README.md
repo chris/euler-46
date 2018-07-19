@@ -18,9 +18,9 @@ These two aspects allow then constraining the values to test for each odd compos
 
 So far I've started with the largest prime and worked backwards. It should be noted that there are (many?) multiple solutions for a given odd composite. e.g. 15 can be solved with `7 + 2(2^2)` or `13 + 2(2^1)`.
 
-I had assumed that this might take a bit of time to run and find a solution, and thus my thought was that I'd try a solution (which I think works in most of the languages I am interested in trying this for) where I create a channel, and inject the odd composites into the channel. Then, have say 4 go-blocks/threads running, that look for solutions. Each go-block, when ready, pulls a number from the channel, and then sees if it can find a solution. If not, it reports that as an answer and stops. The other go-blocks would finish the number they were working on (presumes they all stay fairly close in time), in case that number was also possibly an answer, and maybe is a smaller number than the other go-block that found one, but then seeing that an answer has been found, when they're done with that round, they too quit, and then the answer(s) are returned.
+I had assumed that this might take a bit of time to run and find a solution, and thus my thought was that I'd try a solution (which I think works in most of the languages I am interested in trying this for) where I create a channel, and inject the odd composites into the channel. Then, have a few go-blocks running, that look for solutions. Each go-block, when ready, pulls a number from the channel, and then sees if it can find a solution. If not, it reports that as an answer and stops. The other go-blocks would finish the number they were working on (presumes they all stay fairly close in time), in case that number was also possibly an answer, and maybe is a smaller number than the other go-block that found one, but then seeing that an answer has been found, when they're done with that round, they too quit, and then the answer(s) are returned.
 
-It turned out that at least the initial Clojure implementation was so fast that doing the above is probably not going to gain anything. However, I may still try it just to practice use of channels/go-blocks, etc., and then also to be able to compare this design in other languages.
+It turned out that at least the initial Clojure implementation was so fast that doing the above is unnecessary, however the channel/parallel variant did cut the time in half. The standard solution (without using go-blocks and parallel processing) took about 1200ms. The go-blocks version takes just under half that time (averaged around 560ms), whether using 2, 3, or 4 go-blocks.
 
 ## Redis setup
 
@@ -32,8 +32,6 @@ Run `./redis_primes.rb` with the `primes_upto_1million.txt` file (you won't need
 
 ## Clojure
 
-Initial version with just basically brute force going through odd composites was really fast - takes about 8 seconds, including JVM startup time, etc. and really only ~1.2 seconds (1147-1229ms) per the actual code runtime (see code where it does/outputs the timing).
-
 To run it/find the answer:
 ```
 clj -m goldbach
@@ -44,5 +42,4 @@ To run the tests:
 clj -Atest
 ```
 
-
-
+Used lazy sequence for the odd composite generation, so we're only generating what we need.

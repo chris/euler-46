@@ -51,3 +51,7 @@
 (deftest test-smallest-non-goldbach
   (testing "get the right answer to the Euler problem"
     (is (= 5777 (smallest-non-goldbach)))))
+
+(deftest test-smallest-non-goldbach-using-channels
+  (testing "get the right answer to the Euler problem"
+    (is (= 5777 (smallest-non-goldbach-using-channels)))))

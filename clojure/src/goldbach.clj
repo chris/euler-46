@@ -1,5 +1,6 @@
 (ns goldbach
-  (:require [clj-time [core :as t]]
+  (:require [clojure.core.async :as async :refer [>!! <!! chan go go-loop]]
+            [clj-time [core :as t]]
             [taoensso.carmine :as car :refer (wcar)]))
 
 (def PRIMES "euler-46:primes") ; Redis primes set name
@@ -54,9 +55,47 @@
   []
   (first (filter #(nil? (solution-for-odd-comp %)) (odd-composite-numbers))))
 
+(def source-numbers (chan))
+(def answer-channel (chan))
+
+(defn smallest-non-goldbach-using-channels
+  "Finds the answer, but this one uses channels to feed the test numbers in, and then to
+   publish the answer, in theory to speed it up by running solvers in parallel."
+  []
+  ;; Setup 3 go-blocks to test odd-composites in parallel to find the answer
+  ;; Puts the answer on answer-channel as soon as one is found (presumes the first
+  ;; solution is correct, although technically we should let each block finish that
+  ;; round to be sure there aren't two answers really close to each other, where one
+  ;; of the higher answer blocks finishes before the other)
+  (dotimes [_ 3]
+    (go-loop [num (<!! source-numbers)]
+      (let [result (solution-for-odd-comp num)]
+        (when (nil? result) (>!! answer-channel num)))
+      (recur (<!! source-numbers))))
+  ;; Feed our candidate odd conposite numbers into the source-numbers channel
+  (go (doseq [num (odd-composite-numbers)] (>!! source-numbers num)))
+  ;; Grab the answer as soon as it's available, and we'll be done.
+  ;; The go-blocks will still be running, but our main thread will finish
+  ;; executing, and thus end the program.
+  (<!! answer-channel))
+
+(defn print-answer
+  [label answer run-time]
+  (println
+      (str "Smallest odd composite number without a Goldbach "
+           label
+           " solution: "
+           answer
+           ", run time: "
+           run-time
+           "ms.")))
+
 (defn -main []
-  (let [start-time (t/now)
-        smallest-answer (smallest-non-goldbach)
-        run-time (t/in-millis (t/interval start-time (t/now)))]
-    (println (str "Smallest odd composite number without a Goldbach solution: " smallest-answer))
-    (println (str "Actual run time: " run-time "ms."))))
+  (let [start-time1 (t/now)
+        answer1 (smallest-non-goldbach)
+        run-time1 (t/in-millis (t/interval start-time1 (t/now)))
+        start-time2 (t/now)
+        answer2 (smallest-non-goldbach-using-channels)
+        run-time2 (t/in-millis (t/interval start-time2 (t/now)))]
+    (print-answer "standard" answer1 run-time1)
+    (print-answer "channel/async" answer2 run-time2)))
