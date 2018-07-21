@@ -28,11 +28,12 @@ The Elixir implementation, for a "standard" (non-concurrent) approach, is signif
 
 Note, these aren't true Benchmarks (i.e. I didn't do thousands of samples, etc.), but more for a general gist.
 
-| Solution type | Clojure | Elixir |
-| non-concurrent, command line program time | 8s | 8s |
-| non-concurrent, pure computation time | 1.2s | 6s |
-| concurrent, command line program time | 7s | |
-| concurrent, pure computation time | 560ms | |
+Solution type | Clojure | Elixir
+------------- | ------- | ------
+non-concurrent, command line program time | 8s | 8s
+non-concurrent, pure computation time | 1.2s | 6s
+concurrent, command line program time | 7s |
+concurrent, pure computation time | 560ms |
 
 ## Redis setup
 
