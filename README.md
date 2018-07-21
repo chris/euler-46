@@ -24,6 +24,16 @@ It turned out that at least the initial Clojure implementation was so fast that 
 
 The Elixir implementation, for a "standard" (non-concurrent) approach, is significantly slower. I may not have all lazy-sequence use or some such that could be causing part of it, but the actual computation time is around 6 seconds (vs. just over 1s for Clojure). Elixir/Erlang are not known for speedy math, but this is dramatic. Of course, the actual runtime of starting the program, and getting an answer on the command line is just about the same between Clojure & Elixir, given Clojure/Java's significant VM startup time (nearly all of that time is JVM startup, whereas nearly all the of the runtime for Elixir is it actually computing the answer!).
 
+## Benchmarks
+
+Note, these aren't true Benchmarks (i.e. I didn't do thousands of samples, etc.), but more for a general gist.
+
+| Solution type | Clojure | Elixir |
+| non-concurrent, command line program time | 8s | 8s |
+| non-concurrent, pure computation time | 1.2s | 6s |
+| concurrent, command line program time | 7s | |
+| concurrent, pure computation time | 560ms | |
+
 ## Redis setup
 
 Run `./redis_primes.rb` with the `primes_upto_1million.txt` file (you won't need more than this, or really even half this) to populate the primes in Redis:
