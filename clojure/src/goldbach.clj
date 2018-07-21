@@ -37,7 +37,7 @@
    Returns a vector with the prime and the square base that solves for odd-comp."
   [odd-comp]
   (let [primes (-> odd-comp primes-for-odd-comp reverse)]
-     (some #(solution-for-odd-comp-and-prime odd-comp %) primes)))
+    (some #(solution-for-odd-comp-and-prime odd-comp %) primes)))
 
 (defn next-odd-composite
   "Return the next odd composite number after the argument."
@@ -82,13 +82,13 @@
 (defn print-answer
   [label answer run-time]
   (println
-      (str "Smallest odd composite number without a Goldbach "
-           label
-           " solution: "
-           answer
-           ", run time: "
-           run-time
-           "ms.")))
+   (str "Smallest odd composite number without a Goldbach "
+        label
+        " solution: "
+        answer
+        ", run time: "
+        run-time
+        "ms.")))
 
 (defn -main []
   (let [start-time1 (t/now)

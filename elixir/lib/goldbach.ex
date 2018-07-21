@@ -27,7 +27,7 @@ defmodule Goldbach do
   """
   @spec check_possible_solution(pos_integer, pos_integer, pos_integer) :: boolean
   def check_possible_solution(odd_comp, prime, num_to_square) when odd_comp > prime do
-    odd_comp == (prime + (2 * (num_to_square * num_to_square)))
+    odd_comp == prime + 2 * (num_to_square * num_to_square)
   end
 
   def not_prime?(num) when is_integer(num) do
@@ -57,9 +57,9 @@ defmodule Goldbach do
   """
   def solution_for_odd_comp_and_prime(odd_comp, prime) do
     square_bases = 1..trunc(floor((odd_comp - prime) / 2.0))
-    check = &(check_possible_solution(odd_comp, prime, &1))
+    check = &check_possible_solution(odd_comp, prime, &1)
 
-    case List.first(filter(square_bases, &(check.(&1)))) do
+    case List.first(filter(square_bases, &check.(&1))) do
       nil -> nil
       solution -> {prime, solution}
     end
@@ -73,10 +73,10 @@ defmodule Goldbach do
     odd_comp
     |> primes_for_odd_comp
     |> reverse
-    |> Stream.map(&(solution_for_odd_comp_and_prime(odd_comp, &1)))
+    |> Stream.map(&solution_for_odd_comp_and_prime(odd_comp, &1))
     |> Stream.reject(&is_nil/1)
     |> Enum.take(1)
-    |> List.first
+    |> List.first()
   end
 
   def next_odd_composite(n) do
@@ -87,14 +87,14 @@ defmodule Goldbach do
   Return a stream of odd composite numbers.
   """
   def odd_composite_numbers do
-    Stream.unfold(9, &({&1, next_odd_composite(&1)}))
+    Stream.unfold(9, &{&1, next_odd_composite(&1)})
   end
 
   @doc "Finds the answer - the smallest odd composite to not be solvable by Goldbach's conjecture"
   def smallest_non_goldbach() do
     odd_composite_numbers()
-    |> Stream.filter(&(is_nil(solution_for_odd_comp(&1))))
+    |> Stream.filter(&is_nil(solution_for_odd_comp(&1)))
     |> Enum.take(1)
-    |> List.first
+    |> List.first()
   end
 end
