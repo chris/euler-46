@@ -22,7 +22,7 @@ I had assumed that this might take a bit of time to run and find a solution, and
 
 It turned out that at least the initial Clojure implementation was so fast that doing the above is unnecessary, however the channel/parallel variant did cut the time in half. The standard solution (without using go-blocks and parallel processing) took about 1200ms. The go-blocks version takes just under half that time (averaged around 560ms), whether using 2, 3, or 4 go-blocks.
 
-The Elixir implementation, for a "standard" (non-concurrent) approach, is significantly slower. I may not have all lazy-sequence use or some such that could be causing part of it, but the actual computation time is around 6 seconds (vs. just over 1s for Clojure). Elixir/Erlang are not known for speedy math, but this is dramatic. Of course, the actual runtime of starting the program, and getting an answer on the command line is just about the same between Clojure & Elixir, given Clojure/Java's significant VM startup time (nearly all of that time is JVM startup, whereas nearly all the of the runtime for Elixir is it actually computing the answer!).
+The Elixir implementation, for a "standard" (non-concurrent) approach, is significantly slower. I may not have all lazy-sequence use or some such that could be causing part of it, but the actual computation time is around 6 seconds (vs. just over 1s for Clojure). Elixir/Erlang are not known for speedy math, but this is dramatic. Of course, the actual runtime of starting the program, and getting an answer on the command line is just about the same between Clojure & Elixir, given Clojure/Java's significant VM startup time (nearly all of that time is JVM startup, whereas nearly all the of the runtime for Elixir is it actually computing the answer!). This timing may also be affected by the (not yet solved) re-creation of the Redis connection every time we issue a Redis command.
 
 ## Benchmarks
 
@@ -71,7 +71,8 @@ mix escript.build && ./euler
 
 ### Todo:
 
-- Create single Redis connection to use by functions that use Redis.
+- [ ] Create single Redis connection to use by functions that use Redis.
+- [ ] Implement a concurrent approach.
 
 
 ## Notes Comparing Languages
