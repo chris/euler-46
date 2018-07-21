@@ -43,3 +43,30 @@ clj -Atest
 ```
 
 Used lazy sequence for the odd composite generation, so we're only generating what we need.
+
+
+## Elixir
+
+To run tests:
+
+`mix test`
+
+### Todo:
+
+- Create single Redis connection to use by functions that use Redis.
+
+
+## Notes Comparing Languages
+
+* Clojure's startup time (e.g. to run the program, or run tests not at a REPL) is painful - about 7 seconds.
+* Elixir's startup time is basically instant - programs and tests ran instantly.
+* I get used to not using commas for parameters to functions (in Clojure) quickly!
+* Elixir doc strings, and in particular doc string tests (i.e. where it runs the example code in the docstring) is pretty cool. For simple functions can probably not write tests, and just have a positive and negative example or similar?
+* Elixir runs tests in parallel by default?
+* Clojure's `spec` is pretty amazing, in that you can get very detailed/specific in terms of spec'ing a data structure or function behavior. Haven't seen anything else like this.
+* Elixir's guards are great, and provide sort of a small bit of spec.
+* Really really like Elixir/Erlang standard of returning a tuple such as {:ok, value} to indicate error cases, and then being able to pattern match on that. Clojure's error handling has no standardization, and it has exceptions, but most folks seem to not want to use exceptions. I've used a 3rd party library to do some better error handling and allow pipelining where errors may occur along the way, but it's not that intuitive, and is not a standard/idiom.
+* Clojure handles and uses lazy sequences easily and/or by default. So, most collection handling functions just work with lazy-seq's easily. Elixir splits these out where you're using either functions from Enum, or functions from Stream. However, that said, it's basically just as easy, and maybe a bit more clear that you're working with lazy items (you also don't run into the problem where sometimes something won't be realized in Clojure because it's lazy and you need to do an operation that is sure to realize a result).
+
+
+Stream.unfold(9, &({&1, &1 + 2}))

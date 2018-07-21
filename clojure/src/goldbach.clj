@@ -13,6 +13,8 @@
   {:pre [(> odd-comp prime)]}
   (= odd-comp (+ prime (* 2 (* num-to-square num-to-square)))))
 
+(defn not-prime? [n] (nil? (wcar* (car/zscore PRIMES n))))
+
 (defn primes-below
   [x]
   (map #(Integer/parseInt %) (wcar* (car/zrangebyscore PRIMES 0 x))))
@@ -36,8 +38,6 @@
   [odd-comp]
   (let [primes (-> odd-comp primes-for-odd-comp reverse)]
      (some #(solution-for-odd-comp-and-prime odd-comp %) primes)))
-
-(defn not-prime? [n] (nil? (wcar* (car/zscore PRIMES n))))
 
 (defn next-odd-composite
   "Return the next odd composite number after the argument."
