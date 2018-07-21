@@ -22,6 +22,8 @@ I had assumed that this might take a bit of time to run and find a solution, and
 
 It turned out that at least the initial Clojure implementation was so fast that doing the above is unnecessary, however the channel/parallel variant did cut the time in half. The standard solution (without using go-blocks and parallel processing) took about 1200ms. The go-blocks version takes just under half that time (averaged around 560ms), whether using 2, 3, or 4 go-blocks.
 
+The Elixir implementation, for a "standard" (non-concurrent) approach, is significantly slower. I may not have all lazy-sequence use or some such that could be causing part of it, but the actual computation time is around 6 seconds (vs. just over 1s for Clojure). Elixir/Erlang are not known for speedy math, but this is dramatic. Of course, the actual runtime of starting the program, and getting an answer on the command line is just about the same between Clojure & Elixir, given Clojure/Java's significant VM startup time (nearly all of that time is JVM startup, whereas nearly all the of the runtime for Elixir is it actually computing the answer!).
+
 ## Redis setup
 
 Run `./redis_primes.rb` with the `primes_upto_1million.txt` file (you won't need more than this, or really even half this) to populate the primes in Redis:
@@ -51,6 +53,11 @@ To run tests:
 
 `mix test`
 
+To run it/find answer, you need to compile it and then run it:
+```
+mix escript.build && ./euler
+```
+
 ### Todo:
 
 - Create single Redis connection to use by functions that use Redis.
@@ -67,6 +74,4 @@ To run tests:
 * Elixir's guards are great, and provide sort of a small bit of spec.
 * Really really like Elixir/Erlang standard of returning a tuple such as {:ok, value} to indicate error cases, and then being able to pattern match on that. Clojure's error handling has no standardization, and it has exceptions, but most folks seem to not want to use exceptions. I've used a 3rd party library to do some better error handling and allow pipelining where errors may occur along the way, but it's not that intuitive, and is not a standard/idiom.
 * Clojure handles and uses lazy sequences easily and/or by default. So, most collection handling functions just work with lazy-seq's easily. Elixir splits these out where you're using either functions from Enum, or functions from Stream. However, that said, it's basically just as easy, and maybe a bit more clear that you're working with lazy items (you also don't run into the problem where sometimes something won't be realized in Clojure because it's lazy and you need to do an operation that is sure to realize a result).
-
-
-Stream.unfold(9, &({&1, &1 + 2}))
+* Elixir has string substitution same as Ruby, Clojure have to use `str` to concat strings.

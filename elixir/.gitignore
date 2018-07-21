@@ -22,3 +22,6 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 elixir-*.tar
 
+# Ignore our built executable
+euler
+
