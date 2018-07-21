@@ -2,8 +2,6 @@
 
 Code to solve this Euler problem and experiment with some languages and designs.
 
-Answer to the problem is 5777.
-
 ## Notes on my general solution approach
 
 I put primes up to 1,000,000 into a Redis sorted set (where the score is the same as the prime). This allowed for easy retrieval of primes up to a certain value, as well as is faster than a regular DB. I also did this because I'd been thinking about building this as a way to test Lambda functions in various languages, and I wanted at least one external dependency to make it a more realistic test of cold start time and running time with dependencies (since almost anything I'd build would likely have at least one or two external dependencies, and likely a DB of some sort).
