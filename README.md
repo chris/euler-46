@@ -28,8 +28,8 @@ Note, these aren't true Benchmarks (i.e. I didn't do thousands of samples, etc.)
 
 Solution type | Clojure | Elixir
 ------------- | ------- | ------
-non-concurrent, command line program time | 8s | 8s
-non-concurrent, pure computation time | 1.2s | 6s
+non-concurrent, command line program time | 8s | 1.7s
+non-concurrent, pure computation time | 1.2s | 1.5s
 concurrent, command line program time | 7s |
 concurrent, pure computation time | 560ms |
 
@@ -66,6 +66,10 @@ To run it/find answer, you need to compile it and then run it:
 ```
 mix escript.build && ./euler
 ```
+
+### Notes:
+
+Initially wasn't sure how to create a single persistent connection to Redis in Elixir. This meant that every prime check (call to `not_prime?`), or fetching of primes, was re-creating the connection. My suspicion was that this was a major cause of the slower speed of the Elixir solution. Figured out that needed to make the program an `Application`, and start a supervision tree, with a Redix connection child instance, based on [these instructions](https://hexdocs.pm/redix/real-world-usage.html#global-redix). To do this, added `use Application` to the Euler.CLI module, and then added a `start` function which setup the Redis connection as a named (`:redix`) child process. That name can then be passed to uses of `Redix.command` so it uses that instance. This *massively* sped things up, so that the program ran in about 1.5-2 seconds (instead of about 7+), and about 1.5s for the computation time instead of 6s.
 
 ### Todo:
 

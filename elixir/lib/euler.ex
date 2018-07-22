@@ -1,4 +1,17 @@
 defmodule Euler.CLI do
+  use Application
+
+  def start(_type, _args) do
+    IO.puts("doing start in Euler.CLI")
+
+    children = [
+      {Redix, [[], [name: :redix]]}
+    ]
+
+    opts = [strategy: :one_for_one, name: Euler.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+
   def print_answer(label, answer, runtime) do
     IO.puts("Smallest odd composite number without a Goldbach #{label} solution: #{answer},
       run time: #{runtime}ms.")

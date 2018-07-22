@@ -9,14 +9,6 @@ defmodule Goldbach do
   """
 
   @doc """
-  Get Redis connection.
-  """
-  def redis do
-    {:ok, conn} = Redix.start_link()
-    conn
-  end
-
-  @doc """
   Returns true if the candidate prime and square equal the odd-comp per Goldbach's formula.
 
   ## Examples
@@ -31,7 +23,7 @@ defmodule Goldbach do
   end
 
   def not_prime?(num) when is_integer(num) do
-    case Redix.command(redis(), ["ZSCORE", @primes, "#{num}"]) do
+    case Redix.command(:redix, ["ZSCORE", @primes, "#{num}"]) do
       {:ok, nil} -> true
       {:ok, _} -> false
     end
@@ -41,7 +33,7 @@ defmodule Goldbach do
   Return prime numbers below x
   """
   def primes_below(x) when is_integer(x) and x > 2 do
-    {:ok, p} = Redix.command(redis(), ["ZRANGEBYSCORE", @primes, "0", "#{x}"])
+    {:ok, p} = Redix.command(:redix, ["ZRANGEBYSCORE", @primes, "0", "#{x}"])
     map(p, &String.to_integer/1)
   end
 
