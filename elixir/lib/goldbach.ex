@@ -59,7 +59,7 @@ defmodule Goldbach do
 
   @doc """
   Find a Goldbach soluton for a given odd composite number.
-  Returns a vector with the prime and the square base that solves for odd-comp.
+  Returns a tuple with the prime and the square base that solves for odd-comp.
   """
   def solution_for_odd_comp(odd_comp) when is_integer(odd_comp) do
     odd_comp
@@ -78,8 +78,8 @@ defmodule Goldbach do
   @doc """
   Return a stream of odd composite numbers.
   """
-  def odd_composite_numbers do
-    Stream.unfold(9, &{&1, next_odd_composite(&1)})
+  def odd_composite_numbers(starting_number \\ 9) when starting_number >= 9 do
+    Stream.unfold(starting_number, &{&1, next_odd_composite(&1)})
   end
 
   @doc "Finds the answer - the smallest odd composite to not be solvable by Goldbach's conjecture"

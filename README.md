@@ -1,6 +1,6 @@
 # Euler problem 46 - Goldbach conjecture
 
-Code to solve this Euler problem and experiment with some languages and designs.
+Code to solve [Euler problem 46](https://projecteuler.net/problem=46) and experiment with some languages and designs.
 
 ## Notes on my general solution approach
 
